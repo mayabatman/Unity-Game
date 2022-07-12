@@ -5,8 +5,10 @@ using System.Collections;
 
 public class Bullet : MonoBehaviour {
 
+	
 	void Start()
 	{
+		GameObject.Find("pers").GetComponent<Player>().bullets++;
 		// уничтожить объект по истечению указанного времени (секунд), если пуля никуда не попала
 		Destroy(gameObject, 2);
 	}

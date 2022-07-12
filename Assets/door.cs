@@ -4,29 +4,23 @@ using UnityEngine;
 
 public class door : MonoBehaviour
 {
-
+    public bool HasHeighbour;
+    public bool HasEnemy;
+    
     // Start is called before the first frame update
     void Start()
     {
-
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        GameObject[] enemy_1;
-        enemy_1 = GameObject.FindGameObjectsWithTag("Enemy_1");
-        GameObject[] enemy_2;
-        enemy_2 = GameObject.FindGameObjectsWithTag("Enemy_2");
-
-        if (enemy_1.Length == 0 && enemy_2.Length == 0)
+       // print("статус дверь обновляется N "+HasHeighbour+" E "+HasEnemy);
+        
+        if (HasHeighbour)
         {
             gameObject.SetActive (false);
         }
-        else
-        {
-            gameObject.SetActive (true);
-        }
-
+        else gameObject.SetActive (true);
     }
 }

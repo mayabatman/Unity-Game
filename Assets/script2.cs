@@ -7,11 +7,16 @@ public class script2 : MonoBehaviour
     public GameObject obj;
     public float range = 5f, moveSpeed = 5f;
 
+
+
     void Update() {/*
         float h = Input.GetAxis ("Horizontal");
         float xPos = h*range;
 
         obj.transform.position = new Vector2 (xPos, 0);*/
+
+       // gameObject.GetComponent<script>().Func();
+
 
         if(Input.GetKey(KeyCode.W))
             obj.transform.Translate(Vector2.up*moveSpeed*Time.deltaTime);

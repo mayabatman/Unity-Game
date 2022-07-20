@@ -1,12 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+//попытка подстроить под расширение экрана
 public class Cam : MonoBehaviour
 {
     private float _defaultHeight;
     private float _defaultWidth;
-   // public Canvas can;
 
     private void Start()
     {

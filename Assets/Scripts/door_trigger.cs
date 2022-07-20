@@ -5,17 +5,4 @@ using UnityEngine;
 public class door_trigger : MonoBehaviour
 {
     public bool act;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
 }

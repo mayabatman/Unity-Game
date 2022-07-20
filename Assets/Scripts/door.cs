@@ -6,22 +6,16 @@ public class door : MonoBehaviour
 {
     public bool HasHeighbour;
     public bool HasEnemy;
-    
-    // Start is called before the first frame update
-    void Start()
-    {
-    }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
-       // print("статус дверь обновляется N "+HasHeighbour+" E "+HasEnemy);
-        if(!HasEnemy){
+        if(!HasEnemy){ //если в комнате враг, дверь в любом случае должна быть закрыта
         if (HasHeighbour)
         {
-            gameObject.SetActive (false);
+            gameObject.SetActive (false); //открыть
         }
-        else gameObject.SetActive (true);
+        else gameObject.SetActive (true); //закрыть
         }
     }
 }

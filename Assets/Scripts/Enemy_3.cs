@@ -1,7 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+//быстрая версия врага, предследующего объект игрока
+//перед преследованием он 2 секунды стоит на месте
 public class Enemy_3 : MonoBehaviour
 {
     float enemySpeed = 4f;
@@ -9,13 +10,11 @@ public class Enemy_3 : MonoBehaviour
     public float health = 5f;
     bool activated = false;
     float curTimeout = 0;
-    //public GameObject HealthBonus;
 
     // Start is called before the first frame update
-    IEnumerator Start()
+    void Start()
     {
         target = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
-        yield return new WaitForSeconds(2f);
     }
 
     // Update is called once per frame
@@ -28,7 +27,6 @@ public class Enemy_3 : MonoBehaviour
             if(curTimeout > 2f)
             {
                 activated = true;
-               // StartCoroutine(Wait());
             }
             }
             return;
@@ -36,25 +34,12 @@ public class Enemy_3 : MonoBehaviour
         if (health <= 0)
         {
             Player pers = GameObject.Find("pers").GetComponent<Player>();
-            pers.score = pers.score + 10;
-            //int bonus = Random.Range(0,10);
-            //Debug.Log("ВАУ ЭТО "+bonus);
-            //if (bonus == 4)
-            
-                //GameObject drop = Instantiate(HealthBonus, gameObject.transform);
-                //drop.transform.position = gameObject.transform.position;
-            
+            pers.score += 10; //+10 условных единиц за убийство
             Destroy(gameObject);
         }
         transform.position = Vector2.MoveTowards(transform.position, target.position, enemySpeed*Time.deltaTime);
         
     }
-
-/*    IEnumerator Wait()
-    {
-        Debug.Log("Waiting");
-        yield return new WaitForSeconds (10f);
-    }*/
 
 
     void OnTriggerEnter2D(Collider2D coll)

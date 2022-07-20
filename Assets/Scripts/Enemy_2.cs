@@ -1,24 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+//неподвижный враг стреляет в объект игрока
 public class Enemy_2 : MonoBehaviour
 {
-	public Rigidbody2D bullet; // префаб нашей пули
+	public Rigidbody2D bullet; // префаб пули
     float health = 5f;
 
-    Transform target;
-    Transform ghost;
+    Transform target; //параметр объекта игрока
 
-    public float fireRate = 2f; // скорострельность
     private float curTimeout;
 
-    //public GameObject HealthBonus;
     
     // Start is called before the first frame update
     void Start()
     {
-
+        target = GameObject.Find("pers").GetComponent<Transform>();
     }
 
     // Update is called once per frame
@@ -27,14 +24,7 @@ public class Enemy_2 : MonoBehaviour
         if (health <= 0)
         {
             Player pers = GameObject.Find("pers").GetComponent<Player>();
-            pers.score = pers.score + 10;
-            int bonus = Random.Range(0,10);
-            Debug.Log("ВАУ ЭТО "+bonus);
-            if (bonus == 4)
-            {
-                //GameObject drop = Instantiate(HealthBonus);
-                //drop.transform.position = gameObject.transform.position;
-            }
+            pers.score += 10; //+10 баллов за убийство
             Destroy(gameObject);
         }
 
@@ -44,16 +34,15 @@ public class Enemy_2 : MonoBehaviour
 
     void Fire()
 	{
+        Vector3 difference = target.position - transform.position;
+        float rotateZ = Mathf.Atan2(difference.x, difference.y) * Mathf.Rad2Deg;
+
 		curTimeout += Time.deltaTime;
-        float rnd = Random.Range(110,320)/100f;
-        Debug.Log(rnd);
+        float rnd = Random.Range(110,320)/100f; //частота появления пули рандомная
 		if(curTimeout > rnd)
 		{
             curTimeout = 0;
-			Rigidbody2D clone = Instantiate(bullet, gameObject.transform.position, Quaternion.identity) as Rigidbody2D;
-            /*target = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
-            clone.transform.position = Vector2.MoveTowards(gameObject.transform.position, target.position, speed*Time.deltaTime);
-            clone.transform.right = gameObject.transform.right;*/
+			Rigidbody2D clone = Instantiate(bullet, gameObject.transform.position, Quaternion.Euler(0f,0f, -rotateZ)) as Rigidbody2D;
         }
     }
 
@@ -64,12 +53,4 @@ public class Enemy_2 : MonoBehaviour
             health--;
 		}
 	}
-
-
-/*
-    IEnumerator Fire()
-    {
-        yield return new WaitForSeconds(2);
-        Rigidbody2D clone = Instantiate(bullet, gameObject.transform.position, Quaternion.identity) as Rigidbody2D;
-    }*/
 }

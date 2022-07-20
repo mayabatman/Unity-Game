@@ -1,43 +1,54 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Room : MonoBehaviour
 {
+    //объекты дверей
     public door DoorU;
     public door DoorR;
     public door DoorD;
     public door DoorL;
 
+    //объекты триггеров, которые активируются при входе игрока
     public door_trigger dtU;
     public door_trigger dtR;
     public door_trigger dtD;
     public door_trigger dtL;
+    
+    //объекты лампочек над дверями
+    public GameObject statusU;
+    public GameObject statusR;
+    public GameObject statusD;
+    public GameObject statusL;
 
+    //позиция комнаты
     public Vector2Int RoomPos;
 
-    public GameObject[] enemys;
-    public GameObject Player;
+    public GameObject[] enemys; //враги в комнате
+    public GameObject Player; //объект игрока
 
-    public bool EnDefeated = false;
-    public bool PlayerInside = false;
+    public bool EnDefeated = false; //повержены ли враги
+    public bool PlayerInside = false; //находится ли игрок внутри
 
-    GameObject MainCam;
+    GameObject MainCam; //объект камеры (для обращения к классам)
 
-    float cam_step_horizontal = 19.6f;
-    float cam_step_vertical = 11f;
+    float cam_step_horizontal = 19.6f; //шаг камеры по горизонту
+    float cam_step_vertical = 11f; //шаг камеры по вертикали
+
+    public Slider HealthBarBoss; //HP игрока
 
     // Start is called before the first frame update
     void Start()
     {
-        if (gameObject.tag == "StartRoom")
+        if (gameObject.tag == "StartRoom") // в стартовой комнате нет врагов
         {    
             PlayerInside = true;
             EnDefeated = true;
         }
         MainCam = GameObject.Find("Main Camera");
         Player = GameObject.Find("pers");
-        
     }
 
     // Update is called once per frame
@@ -45,14 +56,16 @@ public class Room : MonoBehaviour
     {
         if (!PlayerInside)
         {
+            //все условные операторы ниже могут сработать только если игрок зашел внутрь
+            //поэтому они меняют статус комнаты на то, что игрок внутри
+
             if (dtL.act)
             {
                 print (RoomPos.x+","+RoomPos.y);
                 PlayerInside = true;
                 Vector2Int lastPos = new Vector2Int(RoomPos.x-1, RoomPos.y);
-                print ("lastPos = "+lastPos.x+","+lastPos.y);
-                MainCam.GetComponent<RoomPlacer>().spawnedRooms[RoomPos.x-1, RoomPos.y].deactDT();
-                MainCam.GetComponent<RoomPlacer>().spawnedRooms[RoomPos.x-1, RoomPos.y].PlayerInside = false; //тут координаты противоположные, потому что это изначально чужой код
+                MainCam.GetComponent<RoomPlacer>().spawnedRooms[RoomPos.x-1, RoomPos.y].deactDT(); 
+                MainCam.GetComponent<RoomPlacer>().spawnedRooms[RoomPos.x-1, RoomPos.y].PlayerInside = false; 
                 MainCam.transform.Translate(Vector2.right*cam_step_horizontal);
                 Player.transform.Translate(Vector2.right*2f);
                 ActEnemys();
@@ -62,9 +75,8 @@ public class Room : MonoBehaviour
                 print (RoomPos.x+","+RoomPos.y);
                 PlayerInside = true;
                 Vector2Int lastPos = new Vector2Int(RoomPos.x+1, RoomPos.y);
-                print ("lastPos = "+lastPos.x+","+lastPos.y);
-                MainCam.GetComponent<RoomPlacer>().spawnedRooms[RoomPos.x+1, RoomPos.y].deactDT();
-                MainCam.GetComponent<RoomPlacer>().spawnedRooms[RoomPos.x+1, RoomPos.y].PlayerInside = false; //тут координаты противоположные, потому что это изначально чужой код
+                MainCam.GetComponent<RoomPlacer>().spawnedRooms[RoomPos.x+1, RoomPos.y].deactDT(); //триггеры в прошкой комнате неактивны
+                MainCam.GetComponent<RoomPlacer>().spawnedRooms[RoomPos.x+1, RoomPos.y].PlayerInside = false;
                 MainCam.transform.Translate(-Vector2.right*cam_step_horizontal);
                 Player.transform.Translate(-Vector2.right*2f);
                 ActEnemys();
@@ -74,9 +86,8 @@ public class Room : MonoBehaviour
                 print (RoomPos.x+","+RoomPos.y);
                 PlayerInside = true;
                 Vector2Int lastPos = new Vector2Int(RoomPos.x, RoomPos.y+1);
-                print ("lastPos = "+lastPos.x+","+lastPos.y);
-                MainCam.GetComponent<RoomPlacer>().spawnedRooms[RoomPos.x, RoomPos.y+1].deactDT();
-                MainCam.GetComponent<RoomPlacer>().spawnedRooms[RoomPos.x, RoomPos.y+1].PlayerInside = false; //тут координаты противоположные, потому что это изначально чужой код
+                MainCam.GetComponent<RoomPlacer>().spawnedRooms[RoomPos.x, RoomPos.y+1].deactDT();//триггеры в прошкой комнате неактивны
+                MainCam.GetComponent<RoomPlacer>().spawnedRooms[RoomPos.x, RoomPos.y+1].PlayerInside = false; 
                 MainCam.transform.Translate(-Vector2.up*cam_step_vertical);
                 Player.transform.Translate(-Vector2.up*2f);
                 ActEnemys();
@@ -86,16 +97,15 @@ public class Room : MonoBehaviour
                 print (RoomPos.x+","+RoomPos.y);
                 PlayerInside = true;
                 Vector2Int lastPos = new Vector2Int(RoomPos.x, RoomPos.y-1);
-                print ("lastPos = "+lastPos.x+","+lastPos.y);
-                MainCam.GetComponent<RoomPlacer>().spawnedRooms[RoomPos.x, RoomPos.y-1].deactDT();
-                MainCam.GetComponent<RoomPlacer>().spawnedRooms[RoomPos.x, RoomPos.y-1].PlayerInside = false; //тут координаты противоположные, потому что это изначально чужой код
+                MainCam.GetComponent<RoomPlacer>().spawnedRooms[RoomPos.x, RoomPos.y-1].deactDT();//триггеры в прошкой комнате неактивны
+                MainCam.GetComponent<RoomPlacer>().spawnedRooms[RoomPos.x, RoomPos.y-1].PlayerInside = false; 
                 MainCam.transform.Translate(Vector2.up*cam_step_vertical);
                 Player.transform.Translate(Vector2.up*2f);
                 ActEnemys();
             }
         }
 
-        if(!EnDefeated && PlayerInside)
+        if(!EnDefeated && PlayerInside) //если враги ещё неповержены, а игрок уже внутри
         {
             if (!GameObject.Find("pers").GetComponent<Player>().InDoor)
                 CloseDoors();
@@ -103,7 +113,7 @@ public class Room : MonoBehaviour
         }
     }
 
-    void deactDT()
+    void deactDT() //деактивация триггеров комнаты
     {
         dtU.act = false;
         dtR.act = false;
@@ -111,30 +121,32 @@ public class Room : MonoBehaviour
         dtL.act = false;
     }
 
-    void ActEnemys()
+    void ActEnemys() //активация врагов
     {
         for (int i = 0; i < enemys.Length; i++)
         {
             enemys[i].SetActive(true);
         }
-        
+        if (HealthBarBoss != null) //в случае если это комната босса активируется и HP слайдер его здоровья
+        {
+            HealthBarBoss.gameObject.SetActive(true);
+        }
     }
 
-    void EnActive()
+    void EnActive()//проверка на то, убиты ли все монстры
     {
         GameObject[] enemy_1;
         enemy_1 = GameObject.FindGameObjectsWithTag("Enemy_1");
         GameObject[] enemy_2;
         enemy_2 = GameObject.FindGameObjectsWithTag("Enemy_2");
 
-        Debug.Log("1 "+enemy_1.Length);
-        Debug.Log("2. "+enemy_2.Length);
-
         if (enemy_1.Length == 0 && enemy_2.Length == 0)
         {
             EnDefeated = true;
-            print("нет врагов");
-            Player.GetComponent<Player>().score = Player.GetComponent<Player>().score+100;
+            int n = MainCam.GetComponent<RoomPlacer>().n;
+            MainCam.GetComponent<RoomPlacer>().defeatedRooms[n] = true;
+            MainCam.GetComponent<RoomPlacer>().n++;
+            Player.GetComponent<Player>().score += 100; //за победу в комнате +100 условных очков
             OpenDoors();
         }
         else
@@ -145,9 +157,8 @@ public class Room : MonoBehaviour
     }
     
 
-    void CloseDoors()
+    public void CloseDoors()// закрываем все двери из комнаты
     {
-        //print("закрываем двери");
         if (DoorD != null)
         DoorD.HasEnemy = true;
         if (DoorR != null)
@@ -156,6 +167,10 @@ public class Room : MonoBehaviour
         DoorL.HasEnemy = true;
         if (DoorU != null)
         DoorU.HasEnemy = true;
+        statusD.GetComponent <Renderer> ().material.color = Color.red;
+        statusR.GetComponent <Renderer> ().material.color = Color.red;
+        statusL.GetComponent <Renderer> ().material.color = Color.red;
+        statusU.GetComponent <Renderer> ().material.color = Color.red;
         if (DoorD != null)
         DoorD.gameObject.SetActive(true);
         if (DoorR != null)
@@ -166,7 +181,7 @@ public class Room : MonoBehaviour
         DoorU.gameObject.SetActive(true);
     }
 
-    void OpenDoors()
+    public void OpenDoors() //открываем все двери в комнату
     {
         //print("открываем двери");
         if (DoorD != null)
@@ -177,44 +192,35 @@ public class Room : MonoBehaviour
         DoorL.HasEnemy = false;
         if (DoorU != null)
         DoorU.HasEnemy = false;
+        
         if (DoorD != null)
         {
-            if (DoorD.HasHeighbour)
+            if (DoorD.HasHeighbour){
                 DoorD.gameObject.SetActive(false);
+                statusD.GetComponent <Renderer> ().material.color = Color.green;
+            }
         }
         if (DoorR != null)
         {
-            if (DoorR.HasHeighbour)
-            DoorR.gameObject.SetActive(false);
+            if (DoorR.HasHeighbour){
+                DoorR.gameObject.SetActive(false);
+                statusR.GetComponent <Renderer> ().material.color = Color.green;
+        
+            }
         }
         if (DoorL != null)
         {
-            if (DoorL.HasHeighbour)
-            DoorL.gameObject.SetActive(false);
+            if (DoorL.HasHeighbour){
+                DoorL.gameObject.SetActive(false);
+                statusL.GetComponent <Renderer> ().material.color = Color.green;
+            }
+        
         }
         if (DoorU != null)
         {
-            if (DoorU.HasHeighbour)
-            DoorU.gameObject.SetActive(false);
-        }
-    }
-
-    void RoomsStatus()
-    {
-        for (int x = 0; x < MainCam.GetComponent<RoomPlacer>().spawnedRooms.GetLength(0); x++ )
-        {
-            for (int y = 0; y < MainCam.GetComponent<RoomPlacer>().spawnedRooms.GetLength(1); y++ )
-            {
-                Room temp = MainCam.GetComponent<RoomPlacer>().spawnedRooms[x,y];
-                if (temp != null)
-                {
-                    print (temp.RoomPos.x+","+temp.RoomPos.y);
-                    if (temp.PlayerInside)
-                        print(" занята");
-                    else
-                        print (" свободна");
-                }
-                
+            if (DoorU.HasHeighbour){
+                DoorU.gameObject.SetActive(false);
+                statusU.GetComponent <Renderer> ().material.color = Color.green;
             }
         }
     }

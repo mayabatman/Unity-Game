@@ -4,35 +4,31 @@ using UnityEngine;
 
 public class enemy_bullet : MonoBehaviour
 {
-    Transform target;
-    float speed = 9f;
-    Vector3 ghost;
+    Transform target; //параметр объекта игрока
+    float speed = 9f; //скорость пули
 
     // Start is called before the first frame update
     void Start()
     {
-        Destroy(gameObject, 2);
+        Destroy(gameObject, 2); //пуля существует 2 сек
         target = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
-        ghost = target.position;
     }
 
     // Update is called once per frame
     void Update()
     {
-        transform.position = Vector2.MoveTowards(transform.position, ghost, speed*Time.deltaTime);
-        if (transform.position == ghost)
-            Destroy(gameObject);
+        transform.Translate(Vector2.up * speed *Time.deltaTime); //пуля летит прямо (в коде Enemy_2 и Boss перед этим она поворачивается в нужную сторону)
     }
 
     void OnTriggerEnter2D(Collider2D coll)
 	{
-		if(!coll.isTrigger && !(coll.tag == "Enemy_2")) // чтобы пуля не реагировала на триггер
+		if(!coll.isTrigger && !(coll.tag == "Enemy_2")&& !(coll.tag == "Enemy_1")) // чтобы пуля не реагировала на триггер
 		{
 			switch(coll.tag)
 			{
 			case "Player":
 				break;
-            case "Abyss":
+            case "Abyss":// в случае соприкосновения с пропастью
                 return;
                 break;
 			}

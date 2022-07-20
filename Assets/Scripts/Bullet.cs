@@ -8,14 +8,13 @@ public class Bullet : MonoBehaviour {
 	
 	void Start()
 	{
-		GameObject.Find("pers").GetComponent<Player>().bullets++;
 		// уничтожить объект по истечению указанного времени (секунд), если пуля никуда не попала
 		Destroy(gameObject, 2);
 	}
 	
 	void OnTriggerEnter2D(Collider2D coll)
 	{
-		if(!coll.isTrigger && !(coll.tag == "Player")) // чтобы пуля не реагировала на триггер
+		if(!coll.isTrigger && !(coll.tag == "Player")) // чтобы пуля не реагировала на самого игрока
 		{
 			switch(coll.tag)
 			{

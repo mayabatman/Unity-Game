@@ -7,26 +7,26 @@ using TMPro;
 
 public class Player : MonoBehaviour
 {
-    public float range = 5f, moveSpeed = 5f;//, health = 5f;
-    public GameObject cam;
-    public int bullets = 0;
-    public bool InDoor;
+    public float range = 5f, moveSpeed = 5f;
+    public GameObject cam; //объект камеры, которая двигается за игроком в другую комнату
+    public bool InDoor; //находится ли игрок в дверях
     public Slider HealthBar;
     public int score = 0;
-    public TMP_Text scoreText;
+    public TMP_Text scoreText; //выведение данных об условных очках
     
 
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log(PlayerPrefs.GetInt("bullets"));
-        HealthBar.maxValue = 20;
-        HealthBar.value = 19;
+        HealthBar.maxValue = 30;
+        HealthBar.value = 30;
     }
     // Update is called once per frame
     void Update()
     {
         scoreText.text = score.ToString();
+
+//самое простое управление движения
 
         if(Input.GetKey(KeyCode.W))
             gameObject.transform.Translate(Vector2.up*moveSpeed*Time.deltaTime);
@@ -36,23 +36,22 @@ public class Player : MonoBehaviour
             gameObject.transform.Translate(Vector2.left*moveSpeed*Time.deltaTime);
         if(Input.GetKey(KeyCode.D))
             gameObject.transform.Translate(-Vector2.left*moveSpeed*Time.deltaTime);
-
-        if (HealthBar.value <= 0){
+        if(Input.GetKey(KeyCode.Escape))
+            SceneManager.LoadScene("menu", LoadSceneMode.Single);
+        if (HealthBar.value <= 0){ //при погибели сохраняется рекорд и выводится главное меню
             Destroy(gameObject);
             Records(score);
-            //PlayerPrefs.SetInt("bullets", bullets);
             PlayerPrefs.Save();
             SceneManager.LoadScene("menu", LoadSceneMode.Single);
-
         }
     }
 
     void OnCollisionEnter2D(Collision2D coll)
 	{
-        if(coll.gameObject.tag == "Enemy_1" || coll.gameObject.tag == "Enemy_2" || coll.gameObject.tag == "Danger")
+        if(coll.gameObject.tag == "Enemy_1" || coll.gameObject.tag == "Enemy_2" || coll.gameObject.tag == "Danger" || coll.gameObject.tag == "Boss")
         {
             HealthBar.value--;
-            gameObject.GetComponent <Renderer> ().material.color = new Color(240/255f, 125/255f, 125/255f);
+            gameObject.GetComponent <Renderer> ().material.color = new Color(240/255f, 125/255f, 125/255f); //при поражении пулей подсветка игрока меняется
             StartCoroutine (return_color());
         }
     }
@@ -61,26 +60,27 @@ public class Player : MonoBehaviour
 	{
         switch (coll.tag) 
 		{
-        case "E_Bullet":
+        case "E_Bullet": //при встече с вражеской пулей
             HealthBar.value--;
             gameObject.GetComponent <Renderer> ().material.color = new Color(240/255f, 125/255f, 125/255f);
             StartCoroutine (return_color());
             break;
-        case "trigger_door":
-            //InDoor = true;
-           // cam.transform.Translate(Vector2.right*cam_step);
-            print("Добро пожаловать в комнату");
+        case "trigger_door": // в дверном преме
             coll.GetComponent<door_trigger>().act = true;
-            if (coll.GetComponent<door_trigger>().act)
-                print ("active now");
             break;
         case "Health":
             HealthBar.value++;
-            Debug.Log("Забираю здровье");
             Destroy(coll.gameObject);
+            break;
+        case "NextLevel": //при переходе на новый уровень
+            Records(score);
+            PlayerPrefs.Save(); //рекорд сохранили
+            SceneManager.LoadScene("next", LoadSceneMode.Single);
             break;
 		}
 	}
+
+//отслеживаем, находится ли игрок в дверях
 
     void OnTriggerStay2D(Collider2D coll)
     {
@@ -98,23 +98,19 @@ public class Player : MonoBehaviour
         {
         case "trigger_door":
             InDoor = false;
-            //coll.GetComponent<door_trigger>().act = false;
             break;
         }
     }
 
-    void Records(int sc)
+    public void Records(int sc) // обновление списка рекордов
     {
         for (int i = 0; i < 5; i++)
         {
             int rec = PlayerPrefs.GetInt((i+1).ToString());
             if (sc > rec){
-                Debug.Log(sc+" > "+rec);
                 PlayerPrefs.SetInt((i+1).ToString(), sc);
                 sc = rec;
             }
-            else Debug.Log(sc+" < "+rec);
-
         }
     }
 

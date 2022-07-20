@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
-
+//вывод данных о рекордах
 public class Records : MonoBehaviour
 {
     public TMP_Text[] rec;
@@ -17,14 +17,10 @@ public class Records : MonoBehaviour
         }
     }
 
-    public void Back()
+    public void Back() //функция для кнопочки назад
     {
         SceneManager.LoadScene("menu", LoadSceneMode.Single);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+
 }
